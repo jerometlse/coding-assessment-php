@@ -1,0 +1,30 @@
+version: "3.4"
+
+services:
+
+  postgres:
+    container_name: coding-assessment-php_postgres
+    image: postgres:14
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: database
+
+  symfony:
+    container_name: coding-assessment-php_symfony
+    image: coding-assessment-php_symfony
+    build:
+      context: .
+      target: app_php
+    volumes:
+      - .:/srv/app
+    ports:
+      - 8000:8000
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/database?serverVersion=14
+    depends_on:
+      - postgres
