@@ -92,7 +92,9 @@ class LeisureBaseController extends AbstractController
      */
     public function create(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ActivityCategoryRepository $activityCategoryRepository)
     { 
-        //TODO secure ENDPOINT
+        if (!$this->getUser() or ($this->getUser() and !in_array('ROLE_ADMIN',$this->getUser()->getRoles()))) {
+            throw $this->createAccessDeniedException();
+        }
 
         $leisureBase = new LeisureBase();
         $leisureBase = $serializer->deserialize($request->getContent(), LeisureBase::class,"json",[
@@ -141,7 +143,10 @@ class LeisureBaseController extends AbstractController
      */
     public function remove(int $id, LeisureBaseRepository $leisureBaseRepository, EntityManagerInterface $em)
     {
-        //TODO secure ENDPOINT 
+        if (!$this->getUser() or ($this->getUser() and !in_array('ROLE_ADMIN',$this->getUser()->getRoles()))) {
+            throw $this->createAccessDeniedException();
+        }
+         
         $leisureBase = $leisureBaseRepository->find($id);
         $em->remove($leisureBase);
         $em->flush();

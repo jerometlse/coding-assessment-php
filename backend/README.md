@@ -38,7 +38,9 @@ MAPBOX_API_URL="https://api.mapbox.com/geocoding/v5"
 * API documention: `http://localhost:8000/api/apidoc.json`
 * Get all activity categories: GET `http://localhost:8000/api/activityCategory`
 * Get all leisure bases: GET `http://localhost:8000/api/leisureBase?page=1&limit=2` 
-* Add a leiseure base on POST `http://localhost:8000/api/leisureBase` with Json like (be careful to put an existing activity ID in the database):
+* Add a leiseure base on POST `http://localhost:8000/api/leisureBase` with: 
+    1. Use api key test `Bearer johnDoeApiKey` in headers
+    2. Json like (be careful to put an existing activity ID in the database):
     {
         "name": "Flyway",
         "description": "Ecole de kitesurf",
@@ -52,4 +54,4 @@ MAPBOX_API_URL="https://api.mapbox.com/geocoding/v5"
                 }
             ]
     }
-* Delete a leiseure base: DELETE POST `http://localhost:8000/api/leisureBase/{id}`
+* Delete a leiseure base: DELETE POST `http://localhost:8000/api/leisureBase/{id}` with api key test `Bearer johnDoeApiKey` in headers
