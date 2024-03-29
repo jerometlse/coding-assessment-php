@@ -23,3 +23,33 @@
 * Symfony version: `5.4`
 * PosgreSQL version: `14`
 * Doctrine version: `3`
+
+# environment variables
+* to use Mapbox api
+MAPBOX_TOKEN
+MAPBOX_API_URL="https://api.mapbox.com/geocoding/v5"
+
+# init project
+1. Install dependencies run: `composer install`
+2. Migrate the data base run: `php bin/console doctrine:migrations:migrate`
+3. Insert data for test/dev run:  `php bin/console doctrine:fixtures:load`
+
+# API END POINTS
+* API documention: `http://localhost:8000/api/apidoc.json`
+* Get all activity categories: GET `http://localhost:8000/api/activityCategory`
+* Get all leisure bases: GET `http://localhost:8000/api/leisureBase?page=1&limit=2` 
+* Add a leiseure base on POST `http://localhost:8000/api/leisureBase` with Json like (be careful to put an existing activity ID in the database):
+    {
+        "name": "Flyway",
+        "description": "Ecole de kitesurf",
+        "link": "http://flyway.fr",
+        "address": "8 Bd de l'Aérium, 33740 Arès France",
+        "activityCategories": 
+            [
+                {
+                    "id": 13,
+                    "label": "Kitesurf"
+                }
+            ]
+    }
+* Delete a leiseure base: DELETE POST `http://localhost:8000/api/leisureBase/{id}`
