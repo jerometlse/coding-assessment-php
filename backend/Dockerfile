@@ -60,7 +60,7 @@ COPY --from=composer /composer /usr/bin/composer
 COPY composer.* symfony.* ./
 RUN set -eux; \
     if [ -f composer.json ]; then \
-		composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
+		composer install --prefer-dist --no-autoloader --no-scripts --no-progress; \
 		composer clear-cache; \
     fi
 
@@ -70,7 +70,7 @@ COPY . ./
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
     if [ -f composer.json ]; then \
-		composer dump-autoload --classmap-authoritative --no-dev; \
+		composer dump-autoload --classmap-authoritative; \
 		composer dump-env prod; \
 		composer run-script --no-dev post-install-cmd; \
 		chmod +x bin/console; sync; \
