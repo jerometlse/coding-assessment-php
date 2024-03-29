@@ -67,6 +67,12 @@ class LeisureBase
      */
     private $longitude;
 
+    /**
+     * current wether of leisure base
+     * @Groups({"leisureBase_index"})
+     */
+    private $currentWether;
+
 
     public function __construct()
     {
@@ -170,6 +176,18 @@ class LeisureBase
     public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getCurrentWether(): ?array
+    {
+        return $this->currentWether;
+    }
+
+    public function setCurrentWether(?array $currentWether): self
+    {
+        $this->currentWether = $currentWether;
 
         return $this;
     }

@@ -6,6 +6,7 @@ use App\Entity\LeisureBase;
 use App\Repository\ActivityCategoryRepository;
 use App\Repository\LeisureBaseRepository;
 use App\Utils\MapboxService;
+use App\Utils\OpenWeatherMapService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,6 +65,7 @@ class LeisureBaseController extends AbstractController
      */
     public function index(Request $request, LeisureBaseRepository $leisureBaseRepository)
     {
+
         $name = $request->query->get("name");
         $description = $request->query->get("description");
         $category = $request->query->get("category");
@@ -72,7 +74,15 @@ class LeisureBaseController extends AbstractController
 
         $leisureBases = $leisureBaseRepository->findByNameDescriptionOrActivityCategory($page, $limit, $name, $description, $category); 
 
-        // TODO get wether for each leisure bases
+        $service = new OpenWeatherMapService($this->getParameter('openWeatherMap'));
+        
+        foreach ($leisureBases as $leisureBase) 
+        {
+            $currentWether = $service->getCurrentWeather($leisureBases[0]->getLatitude(), $leisureBases[0]->getLongitude());
+            if ($currentWether){
+                $leisureBase->setCurrentWether($currentWether);
+            }
+        }
 
         return $this->json($leisureBases,200,[],  ["groups"=> ["leisureBase_index"]]);
     }

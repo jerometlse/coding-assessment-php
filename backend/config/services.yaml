@@ -7,6 +7,10 @@ parameters:
     mapbox:
         token: '%env(MAPBOX_TOKEN)%'
         api_url: '%env(MAPBOX_API_URL)%'
+    
+    openWeatherMap:
+        api_key: '%env(OPENWEATHERMAP_API_KEY)%'
+        api_url: '%env(OPENWEATHERMAP_API_URL)%'
 
 services:
     # default configuration for services in *this* file

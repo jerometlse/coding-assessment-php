@@ -28,6 +28,9 @@
 * to use Mapbox api
 MAPBOX_TOKEN
 MAPBOX_API_URL="https://api.mapbox.com/geocoding/v5"
+* to use OpenWeatherMap
+OPENWEATHERMAP_API_KEY
+OPENWEATHERMAP_API_URL="https://api.openweathermap.org/data/2.5/onecall"
 
 # init project
 1. Install dependencies run: `composer install`
