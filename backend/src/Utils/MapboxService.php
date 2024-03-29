@@ -38,11 +38,13 @@ class MapboxService{
         );
 
         $statusCode = $response->getStatusCode();
-        $result = $response->toArray();
-        if($statusCode === 200 and $result['features'] and count($result['features'])){
-            $firstfeature = $result['features'][0];
-            $coordinates['longitude'] = $firstfeature['center'][0];
-            $coordinates['latitude'] = $firstfeature['center'][1];
+        if($statusCode === 200 ){
+            $result = $response->toArray();
+            if($result['features'] and count($result['features'])){
+                $firstfeature = $result['features'][0];
+                $coordinates['longitude'] = $firstfeature['center'][0];
+                $coordinates['latitude'] = $firstfeature['center'][1];
+            }
         }
         
         return $coordinates;
