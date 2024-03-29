@@ -18,7 +18,7 @@ class LeisureBase
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"leisureBase_index", "leisurebase_create"})
+     * @Groups({"leisureBase_index", "leisurebase_update"})
      */
     private $id;
 
@@ -123,7 +123,7 @@ class LeisureBase
     /**
      * @return Collection<int, ActivityCategory>
      */
-    public function getactivityCategories(): Collection
+    public function getActivityCategories(): Collection
     {
         return $this->activityCategories;
     }

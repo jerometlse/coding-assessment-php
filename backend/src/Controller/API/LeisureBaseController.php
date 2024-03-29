@@ -90,7 +90,14 @@ class LeisureBaseController extends AbstractController
 
     /**
      * @Route(name="create", methods={"POST"})
-     * 
+     * @OA\Parameter(
+     *     name="Leisure base",
+     *     in="query",
+     *     description="Leisure base json",
+     *      @OA\JsonContent(
+     *        ref=@Model(type=LeisureBase::class, groups={"leisureBase_create"})
+     *     )
+     * )
      * @OA\Response(
      *     response=200,
      *     description="Returns created leisure base",
@@ -165,10 +172,72 @@ class LeisureBaseController extends AbstractController
     }
 
     /**
-     * @Route(name = "update", methods={"PUT","PUSH"})
+     * @Route("/{id}" ,name = "update", methods={"PUT","PUSH"})
+     * 
+     * @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="leisure base id",
+     *     @OA\Schema(type="integer")
+     * )     
+     * @OA\Parameter(
+     *     name="Leisure base",
+     *     in="query",
+     *     description="Leisure base json",
+     *      @OA\JsonContent(
+     *        ref=@Model(type=LeisureBase::class, groups={"leisureBase_create"})
+     *     )
+     * )
+     * 
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns created leisure base",
+     *     @OA\JsonContent(
+     *        ref=@Model(type=LeisureBase::class, groups={"leisureBase_index"})
+     *     )
+     * )
+     * @OA\Tag(name="LeisureBase")
      */
-    public function update(LeisureBase $request, EntityManagerInterface $em)
+     
+    public function update(
+        Request $request, 
+        SerializerInterface $serializer, 
+        EntityManagerInterface $em, 
+        ActivityCategoryRepository $activityCategoryRepository, 
+        LeisureBaseRepository $leisureBaseRepository)
     {
-        //TODO 
+        if (!$this->getUser() or ($this->getUser() and !in_array('ROLE_ADMIN',$this->getUser()->getRoles()))) {
+            throw $this->createAccessDeniedException();
+        }
+
+
+        $leisureBase = $leisureBaseRepository->find($request->get('id'));
+        $leisureBase = $serializer->deserialize($request->getContent(), LeisureBase::class,"json",[
+                AbstractNormalizer::OBJECT_TO_POPULATE => $leisureBase,
+                "groups" => ["leisurebase_create"]
+        ]);
+
+         // TODO find how to use serialier ?
+         if ($activityCategories=json_decode($request->getContent())->activityCategories){
+            foreach( $activityCategories as $activityCategory){
+                $activityCategory = $activityCategoryRepository->find($activityCategory->id);
+                if ($activityCategory){
+                    $leisureBase->addActivityCategory($activityCategory);
+                }
+            }
+        }
+
+        // Get longitude and latitude
+        $mapboxService = new MapboxService($this->getParameter('mapbox'));
+        $coordinates = $mapboxService->getAddressLatitudeAndLongitude($leisureBase->getAddress());        
+        $leisureBase->setLongitude($coordinates['longitude']);
+        $leisureBase->setLatitude($coordinates['latitude']);
+
+        $em->persist($leisureBase);
+        $em->flush();
+
+        return $this->json([$leisureBase], 200, [], [
+            "groups" => ["leisureBase_index"]
+        ]);
     }
 }
